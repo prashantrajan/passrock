@@ -1,0 +1,4 @@
+en:
+  errors:
+    messages:
+      passrock_secure: "appears to be a commonly used password"
