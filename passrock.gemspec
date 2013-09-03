@@ -6,7 +6,7 @@ require 'passrock/version'
 Gem::Specification.new do |spec|
   spec.name          = 'passrock'
   spec.version       = Passrock::VERSION
-  spec.authors       = ['Bitium Inc']
+  spec.authors       = ['Bitium, Inc']
   spec.email         = ['devops@bitium.com']
   spec.description   = %q{Client library for Passrock Binary Database}
   spec.summary       = %q{Ruby client library to access a Passrock (Passrock.com) binary database }

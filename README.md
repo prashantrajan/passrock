@@ -7,7 +7,7 @@ Ruby client library for programmatic access to the [Passrock Binary Database](ht
 
 Add this line to your application's Gemfile:
 
-    gem 'passrock', :github => 'bitium/passrock'
+    gem 'passrock'
 
 And then execute:
 
