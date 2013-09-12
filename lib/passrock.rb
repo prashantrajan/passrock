@@ -1,4 +1,5 @@
 require 'passrock/version'
+require 'passrock/exceptions'
 require 'passrock/configuration'
 require 'passrock/password_db'
 

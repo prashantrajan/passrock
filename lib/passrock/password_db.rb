@@ -12,11 +12,13 @@ module Passrock
     end
 
 
-    attr_reader :filename, :private_key
+    attr_reader :password_db, :private_key
 
-    def initialize(filename, private_key)
-      @filename = filename
-      @private_key = private_key
+    def initialize(opts = {})
+      @password_db = opts[:password_db]
+      @private_key = opts[:private_key]
+
+      raise PasswordDbNotFoundError, "Passrock Password DB not found at: #{@password_db}" unless File.file?(@password_db)
     end
 
     def password_in_searchable_form(password)
@@ -40,11 +42,11 @@ module Passrock
 
     def total_records
       # Minus 1 for length in file and 1 for 0-up counting
-      @total_records ||= (File.size(filename) / RECORD_LENGTH) - 2
+      @total_records ||= (File.size(password_db) / RECORD_LENGTH) - 2
     end
 
     def find_by_binary_search(password)
-      file = File.new(filename, 'rb')
+      file = File.new(password_db, 'rb')
       target = password_in_searchable_form(password)
 
       lo = 1 # start at 1 because the testKey is at 0
