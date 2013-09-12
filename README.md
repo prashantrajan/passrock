@@ -18,34 +18,38 @@ And then execute:
 
 ### Plain Ol' Ruby (PORO)
 
-      require 'passrock'
+```ruby
+require 'passrock'
 
-      passrock_db = Passrock::PasswordDb.new('/path/to/passrock/binary.dat', 'your private key')
-      passrock_db.secure?('password') # => false
-      passrock_db.insecure?('av3r^securePass') # => false
-
+passrock_db = Passrock::PasswordDb.new(:password_db => '/path/to/passrock/binary.dat', :private_key => 'your private key')
+passrock_db.secure?('password') # => false
+passrock_db.insecure?('av3r^securePass') # => false
+```
 
 ### Ruby on Rails
 
 This library provides a custom ActiveModel validation:
 
-      # Configure: config/initializers/passrock.rb
-      Passrock.configure do |config|
-        config.password_db = '/path/to/passrock/binary.dat'
-        config.private_key = 'your private key'
-      end
+```ruby
+# Configure: config/initializers/passrock.rb
+Passrock.configure do |config|
+  config.password_db = '/path/to/passrock/binary.dat'
+  config.private_key = 'your private key'
+end
 
-      # Model
-      # e.g. app/models/user.rb
-      validates :password, :passrock_secure => true
+# Model
+# e.g. app/models/user.rb
+validates :password, :passrock_secure => true
+```
 
-      # Customize the error message (see: http://guides.rubyonrails.org/i18n.html#error-message-scopes)
-      # e.g. config/locales/en.yml
-      activerecord:
-        errors:
-          messages:
-            passrock_secure: "appears to be a commonly used password"
-
+```yaml
+# Customize the error message (see: http://guides.rubyonrails.org/i18n.html#error-message-scopes)
+# e.g. config/locales/en.yml
+activerecord:
+  errors:
+    messages:
+      passrock_secure: "appears to be a commonly used password"
+```
 
 ## Contributing
 
