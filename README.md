@@ -60,7 +60,7 @@ activerecord:
 5. Create new Pull Request
 
 
-# Specs
+## Specs
 
 To run the spec suite:
 
