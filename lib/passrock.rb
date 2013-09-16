@@ -1,6 +1,7 @@
 require 'passrock/version'
 require 'passrock/exceptions'
 require 'passrock/configuration'
+require 'passrock/password_db_file'
 require 'passrock/password_db'
 
 require 'passrock/railtie' if defined?(::Rails::Railtie)

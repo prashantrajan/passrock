@@ -27,6 +27,10 @@ def passrock_password_db
   ENV['PASSROCK_PASSWORD_DB']
 end
 
+def passrock_password_db_file
+  ENV['PASSROCK_PASSWORD_DB_FILE']
+end
+
 def passrock_private_key
   ENV['PASSROCK_PRIVATE_KEY']
 end
