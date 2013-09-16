@@ -1,6 +1,7 @@
 # Passrock
 
 Ruby client library for programmatic access to the [Passrock Binary Database](https://www.passrock.com/demo.php).
+
 This library adheres to [SemVer](http://semver.org). Pre v1.0.0 is considered alpha level software.
 
 
