@@ -1,6 +1,7 @@
 # Passrock
 
 Ruby client library for programmatic access to the [Passrock Binary Database](https://www.passrock.com/demo.php).
+This library adheres to [SemVer](http://semver.org). Pre v1.0.0 is considered alpha level software.
 
 
 ## Installation
@@ -21,9 +22,9 @@ And then execute:
 ```ruby
 require 'passrock'
 
-passrock_db = Passrock::PasswordDb.new(:password_db => '/path/to/passrock/binary.dat', :private_key => 'your private key')
+passrock_db = Passrock::PasswordDb.new(:password_db => '/path/to/passrock_db_dir', :private_key => 'your private key')
 passrock_db.secure?('password') # => false
-passrock_db.insecure?('av3r^securePass') # => false
+passrock_db.insecure?('PASSWORD') # => true
 ```
 
 ### Ruby on Rails
@@ -33,7 +34,7 @@ This library provides a custom ActiveModel validation:
 ```ruby
 # Configure: config/initializers/passrock.rb
 Passrock.configure do |config|
-  config.password_db = '/path/to/passrock/binary.dat'
+  config.password_db = '/path/to/passrock_db_dir'
   config.private_key = 'your private key'
 end
 

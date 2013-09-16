@@ -4,7 +4,7 @@ require 'bcrypt'
 module Passrock
   class PasswordDb
 
-    RECORD_LENGTH = 23
+    RECORD_LENGTH = 12
 
 
     def self.bcrypt_hash(secret, salt)
@@ -18,15 +18,7 @@ module Passrock
       @password_db = opts[:password_db]
       @private_key = opts[:private_key]
 
-      raise PasswordDbNotFoundError, "Passrock Password DB not found at: #{@password_db}" unless File.file?(@password_db)
-    end
-
-    def password_in_searchable_form(password)
-      hashed_password = self.class.bcrypt_hash(password, private_key)
-
-      searchable = hashed_password[29..-1]
-      searchable.tr!('./ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/')
-      searchable += '=' * (3 - (searchable.size + 3) % 4)
+      raise PasswordDbDirNotFoundError, "Passrock Password DB directory not found at: #{@password_db}" unless File.directory?(@password_db)
     end
 
     def secure?(password)
@@ -37,25 +29,37 @@ module Passrock
       !secure?(password)
     end
 
+    def password_in_searchable_form(password)
+      password = password.downcase
+      hashed_password = self.class.bcrypt_hash(password, private_key)
+
+      searchable = hashed_password[29..-1]
+      searchable.tr!('./ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/')
+      searchable += '=' * (3 - (searchable.size + 3) % 4)
+      searchable[0, 16]
+    end
+
+    def password_db_file(hashed_password)
+      first_char = hashed_password[0]
+      first_char = '!' if first_char == '/'
+      File.join(password_db, "PRbinary#{first_char}.dat")
+    end
+
 
     private
 
-    def total_records
-      # Minus 1 for length in file and 1 for 0-up counting
-      @total_records ||= (File.size(password_db) / RECORD_LENGTH) - 2
-    end
-
     def find_by_binary_search(password)
-      file = File.new(password_db, 'rb')
       target = password_in_searchable_form(password)
+      file = File.new(password_db_file(target), 'rb')
+      total_records = (File.size(file) / RECORD_LENGTH) - 1
 
-      lo = 1 # start at 1 because the testKey is at 0
+      lo = 0
       hi = total_records
       while lo <= hi
         mid = (lo + (hi - lo) / 2)
         file.seek(RECORD_LENGTH * mid, IO::SEEK_SET)
         midtest = file.read(RECORD_LENGTH)
-        raise 'Error reading binary file' if midtest.nil?
+        raise BinaryFileReadError if midtest.nil?
 
         midtest = Base64.strict_encode64(midtest)
 

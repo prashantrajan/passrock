@@ -22,21 +22,12 @@ describe Passrock::PasswordDb do
 
   describe '#initialize' do
 
-    context 'when password_db file does not exist' do
-      it 'raises PasswordDbNotFoundError' do
+    context 'when password_db base directory does not exist' do
+      it 'raises PasswordDbDirectoryNotFoundError' do
         expect {
           described_class.new(:password_db => '/invalid/path/to/password_db', :private_key => private_key)
-        }.to raise_error(Passrock::PasswordDbNotFoundError)
+        }.to raise_error(Passrock::PasswordDbDirNotFoundError)
       end
-    end
-
-  end
-
-  describe '#password_in_searchable_form' do
-
-    it 'returns the given password in a searchable format' do
-      subject = described_class.new(valid_init_opts)
-      expect(subject.password_in_searchable_form(insecure_password)).to eq('+lR0p4OzjXJnta/4GGtqdaBQEFPQdjI=')
     end
 
   end
@@ -48,6 +39,12 @@ describe Passrock::PasswordDb do
     context 'when given password is present in the password database' do
       it 'returns false' do
         expect(subject.secure?(insecure_password)).to be_false
+
+        # sanity check other known insecure passwords
+        #[ 'inIUfiWO13', 'PVGWpkf81', 'cSAuOcUW58', 'XxPRBGF11', 'WjNYUmGj72', 'P0RQU33SM3N3ST3r' ].each do |password|
+        [ 'inIUfiWO13', 'PVGWpkf81' ].each do |password|
+          expect(subject.secure?(password)).to be_false
+        end
       end
     end
 
@@ -66,6 +63,7 @@ describe Passrock::PasswordDb do
       end
     end
 
+
   end
 
   describe '#insecure?' do
@@ -81,6 +79,38 @@ describe Passrock::PasswordDb do
     context 'when given password does not appear in the password database' do
       it 'returns false' do
         expect(subject.insecure?(secure_password)).to be_false
+      end
+    end
+
+  end
+
+  describe '#password_in_searchable_form' do
+
+    let(:subject) { described_class.new(valid_init_opts) }
+
+    it 'returns the given password in a searchable format' do
+      expect(subject.password_in_searchable_form(insecure_password)).to eq('+lR0p4OzjXJnta/4')
+    end
+
+    context 'when given password is mixed cased' do
+      it 'returns the given password in a searchable format ignoring case' do
+        expect(subject.password_in_searchable_form(insecure_password.upcase)).to eq('+lR0p4OzjXJnta/4')
+      end
+    end
+
+  end
+
+  describe '#password_db_file' do
+
+    let(:subject) { described_class.new(valid_init_opts) }
+
+    it 'returns the db file to check based on the given hashed password' do
+      expect(subject.password_db_file('g+vOBRu/5hi40RA5')).to eq("#{password_db}/PRbinaryg.dat")
+    end
+
+    context 'when first char of the hashed password is a /' do
+      it 'returns !' do
+        expect(subject.password_db_file('/FOOBAR')).to eq("#{password_db}/PRbinary!.dat")
       end
     end
 
