@@ -2,7 +2,7 @@ require 'base64'
 require 'bcrypt'
 
 module Passrock
-  class PasswordDbFile
+  class PasswordDbFinder
 
     RECORD_LENGTH = 12
 
@@ -23,17 +23,14 @@ module Passrock
       password_db_is_a_file? || password_db_is_a_directory?
     end
 
-    def search(password)
+    def find(password)
       raise PasswordDbNotFoundError, "Passrock Password DB not found at: #{password_db}" unless valid?
       find_by_binary_search(password)
     end
 
     def filename(hashed_password = nil)
       return password_db if password_db_is_a_file?
-
-      first_char = hashed_password[0]
-      first_char = '!' if first_char == '/'
-      File.join(password_db, "PRbinary#{first_char}.dat")
+      File.join(password_db, "PRbinary#{hashed_password.ord}.dat")
     end
 
     def password_db_is_a_file?

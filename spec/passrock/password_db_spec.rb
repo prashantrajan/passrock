@@ -16,9 +16,8 @@ describe Passrock::PasswordDb do
       it 'returns false' do
         expect(subject.secure?(insecure_password)).to be_false
 
-        # sanity check other known passwords
-        #[ 'inIUfiWO13', 'PVGWpkf81', 'cSAuOcUW58', 'XxPRBGF11', 'WjNYUmGj72', 'P0RQU33SM3N3ST3r' ].each do |password|
-        [ 'inIUfiWO13', 'PVGWpkf81' ].each do |password|
+        # sanity check other known insecure passwords
+        [ 'inIUfiWO13', 'PVGWpkf81', 'cSAuOcUW58', 'XxPRBGF11', 'WjNYUmGj72', 'P0RQU33SM3N3ST3r' ].each do |password|
           expect(subject.secure?(password)).to be_false
         end
       end
