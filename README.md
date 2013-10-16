@@ -1,5 +1,7 @@
 # Passrock
 
+[![Code Climate](https://codeclimate.com/github/bitium/passrock.png)](https://codeclimate.com/github/bitium/passrock)
+
 Ruby client library for programmatic access to the [Passrock Binary Database](https://www.passrock.com/demo.php).
 
 This library adheres to [SemVer](http://semver.org). Pre v1.0.0 is considered alpha level software.
