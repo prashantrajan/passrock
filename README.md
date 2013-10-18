@@ -1,5 +1,6 @@
 # Passrock
 
+[![Gem Version](https://badge.fury.io/rb/passrock.png)](http://badge.fury.io/rb/passrock)
 [![Code Climate](https://codeclimate.com/github/bitium/passrock.png)](https://codeclimate.com/github/bitium/passrock)
 
 Ruby client library for programmatic access to the [Passrock Binary Database](https://www.passrock.com/demo.php).
